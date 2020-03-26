@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Aplikasi Copid19</title>
+
+    <!-- bootstrap 4 -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <!-- Menyisipkan Vuejs dari CDN -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+</head>
+<body>
+
+    <!-- elemen kontainer untuk aplikasi -->
+    <div id="app" class="bg-light text-dark">
+        <div class="d-flex flex-column">
+            <nav class="navbar navbar-dark bg-primary fixed-top topbar shadow">
+                <a class="navbar-brand" href="/app.copid.html">COVID<sup>19</sup></a>
+                <a href="https://kawalcorona.com/api/" class="navbar-text text-light">Power by KawalCorona</a>
+            </nav>
+            <div class="container-fluid" style="margin-top: 4rem;">
+                <div class="row mb-4">
+                    <div class="col-lg-3 col-md-6 col-xs-6">
+                        <div class="card text-white bg-primary mt-4 shadow">
+                            <div class="card-header">Country</div>
+                            <div class="card-body">
+                                {{ data.name }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-xs-6">
+                        <div class="card text-white bg-warning mt-4 shadow">
+                            <div class="card-header">Positive</div>
+                            <div class="card-body">
+                                {{ data.positif }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-xs-6">
+                        <div class="card text-white bg-success mt-4 shadow">
+                            <div class="card-header">Recovered</div>
+                            <div class="card-body">
+                                {{ data.sembuh }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-xs-6">
+                        <div class="card text-white bg-danger mt-4 shadow">
+                            <div class="card-header">Deaths</div>
+                            <div class="card-body">
+                                {{ data.meninggal }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-sm-flex align-items-center justify-content-between">
+                    <h1 class="h4 mb-0 text-gray-800">Data Global</h1>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-lg-4 col-md-4 col-xs-12">
+                        <div class="card text-white bg-warning mt-4 shadow">
+                            <div class="card-header">Positive</div>
+                            <div class="card-body">
+                                {{ positive }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-xs-12">
+                        <div class="card text-white bg-success mt-4 shadow">
+                            <div class="card-header">Recovered</div>
+                            <div class="card-body">
+                                {{ recovered }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-xs-12">
+                        <div class="card text-white bg-danger mt-4 shadow">
+                            <div class="card-header">Deaths</div>
+                            <div class="card-body">
+                                {{ deaths }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-sm-flex align-items-center justify-content-between mt-4 mb-4">
+                    <h1 class="h4 mb-0 text-gray-800">Data Indonesia Berdasarkan Provinsi</h1>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-lg-12">
+                        <div class="card shadow">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-md">
+                                        <thead>
+                                            <tr>
+                                                <th>Nama Provinsi</th>
+                                                <th>Kasus Positif</th>
+                                                <th>Kasus Sembuh</th>
+                                                <th>Kasus Meninggal</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="item in prov">
+                                                <td>{{ item.attributes.Provinsi }}</td>
+                                                <td>{{ item.attributes.Kasus_Posi }}</td>
+                                                <td>{{ item.attributes.Kasus_Semb }}</td>
+                                                <td>{{ item.attributes.Kasus_Meni }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="copyright text-center">
+                <span>Copyright &copy; Triana Yulianto 2020</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- aplikasi Vue Hello -->
+    <script>
+        var app = new Vue({
+            el: "#app",
+            data: {
+                data: [],
+                prov: [],
+                positive: null,
+                recovered: null,
+                deaths: null,
+            },
+            async mounted() {
+                await axios
+                        .get('https://api.kawalcorona.com/indonesia/')
+                        .then(response => [
+                            this.data = response.data[0]
+                        ])
+                        .catch(error => {
+                            console.log(error)
+                        });
+                
+                await axios
+                        .get('https://api.kawalcorona.com/positif/')
+                        .then(response => [
+                            this.positive = response.data.value
+                        ])
+                        .catch(error => {
+                            console.log(error)
+                        });
+
+
+                await axios
+                        .get('https://api.kawalcorona.com/sembuh/')
+                        .then(response => [
+                            this.recovered = response.data.value
+                        ])
+                        .catch(error => {
+                            console.log(error)
+                        });
+
+                await axios
+                        .get('https://api.kawalcorona.com/meninggal/')
+                        .then(response => [
+                            this.deaths = response.data.value
+                        ])
+                        .catch(error => {
+                            console.log(error)
+                        });
+
+                await axios
+                        .get('https://api.kawalcorona.com/indonesia/provinsi/')
+                        .then(response => [
+                            this.prov = response.data
+                        ])
+                        .catch(error => {
+                            console.log(error)
+                        });
+            },
+        });
+    </script>
+</body>
+</html>
