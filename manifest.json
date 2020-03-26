@@ -1,11 +1,18 @@
 {  
     "name": "Novel Coronavirus",
     "short_name": "Covid 19",
-    "icons": [{
-        "src": "src/icon.png",
-        "sizes": "128x128",
-        "type": "image/png"
-    }],
+    "icons": [
+        {
+            "src": "src/icon.png",
+            "sizes": "128x128",
+            "type": "image/png"
+        },
+        {
+            "src": "src/icon.png",
+            "sizes": "256x256",
+            "type": "image/png"
+        }
+    ],
     "lang": "id-ID",     
     "start_url": "/index.html", 
     "display": "standalone",  
