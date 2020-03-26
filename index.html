@@ -190,23 +190,10 @@
                             console.log(error)
                         });
             },
-            create() {
-                window.addEventListener("onload", this.onWindowLoad);
-            },
-            methods: {
-                onWindowLoad() {
-                    if('serviceWorker' in navigator) {
-                        navigator.serviceWorker.register('sw.js')
-                        .then(function() {
-                            console.log('Service Worker Registered');
-                        });
-                    }
-                },
-            },
         });
     </script>
 
     <!-- main js-->
-    <!-- <script src="js/main.js"></script> -->
+    <script src="js/main.js"></script>
 </body>
 </html>
